@@ -36,122 +36,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Icon } from "@/components/ui/icon";
-
-type WofRecord = {
-  id: string;
-  name: string;
-  licensePlate: string;
-  vehicleMake: string;
-  expiryDate: Date;
-};
-
-const nzVehicleMakes = [
-  "Toyota",
-  "Honda",
-  "Ford",
-  "Mazda",
-  "Nissan",
-  "Subaru",
-  "Mitsubishi",
-  "Suzuki",
-  "Kia",
-  "Hyundai",
-  "BMW",
-  "Audi",
-  "Mercedes-Benz",
-  "Volkswagen",
-  "Volvo",
-  "Holden",
-  "Peugeot",
-  "Citroen",
-  "Renault",
-  "Skoda",
-  "Fiat",
-  "Mini",
-  "Land Rover",
-  "Jeep",
-  "Tesla",
-];
-
-const initialWofData: WofRecord[] = [
-  {
-    id: "1",
-    name: "John Smith",
-    licensePlate: "ABC123",
-    vehicleMake: "Toyota",
-    expiryDate: new Date("2025-03-15"),
-  },
-  {
-    id: "2",
-    name: "Mary Johnson",
-    licensePlate: "XYZ789",
-    vehicleMake: "Honda",
-    expiryDate: new Date("2025-04-22"),
-  },
-  {
-    id: "3",
-    name: "David Williams",
-    licensePlate: "LMN456",
-    vehicleMake: "Ford",
-    expiryDate: new Date("2025-05-10"),
-  },
-  {
-    id: "4",
-    name: "Sarah Brown",
-    licensePlate: "DEF321",
-    vehicleMake: "Mazda",
-    expiryDate: new Date("2025-06-08"),
-  },
-  {
-    id: "5",
-    name: "Michael Davis",
-    licensePlate: "GHI654",
-    vehicleMake: "Nissan",
-    expiryDate: new Date("2025-07-19"),
-  },
-  {
-    id: "6",
-    name: "Emily Wilson",
-    licensePlate: "JKL987",
-    vehicleMake: "Subaru",
-    expiryDate: new Date("2025-08-30"),
-  },
-  {
-    id: "7",
-    name: "James Taylor",
-    licensePlate: "PQR147",
-    vehicleMake: "Mitsubishi",
-    expiryDate: new Date("2025-09-05"),
-  },
-  {
-    id: "8",
-    name: "Linda Anderson",
-    licensePlate: "STU258",
-    vehicleMake: "Suzuki",
-    expiryDate: new Date("2025-10-12"),
-  },
-  {
-    id: "9",
-    name: "Robert Martinez",
-    licensePlate: "VWX369",
-    vehicleMake: "Kia",
-    expiryDate: new Date("2025-11-20"),
-  },
-  {
-    id: "10",
-    name: "Jennifer Garcia",
-    licensePlate: "YZA741",
-    vehicleMake: "Hyundai",
-    expiryDate: new Date("2025-12-15"),
-  },
-];
-
-const formatDate = (date: Date): string => {
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+import { Badge } from "@/components/ui/badge";
+import {
+  WofRecord,
+  nzVehicleMakes,
+  initialWofData,
+  formatDate,
+  getStatus,
+} from "@/lib/utils";
 
 export default function Dashboard() {
   const [wofData, setWofData] = useState<WofRecord[]>(initialWofData);
@@ -175,7 +67,6 @@ export default function Dashboard() {
     formState: { errors },
   } = useForm<WofRecord>({
     defaultValues: {
-      id: "",
       name: "",
       licensePlate: "",
       vehicleMake: "",
@@ -215,17 +106,6 @@ export default function Dashboard() {
       setSortColumn(column);
       setSortOrder("asc");
     }
-  };
-
-  const openEditDialog = (record: WofRecord) => {
-    setEditingRecord(record);
-    setValue("id", record.id);
-    setValue("name", record.name);
-    setValue("licensePlate", record.licensePlate);
-    setValue("vehicleMake", record.vehicleMake);
-    setValue("expiryDate", record.expiryDate);
-    setSelectedDate(record.expiryDate);
-    setIsEditDialogOpen(true);
   };
 
   const handleAddSubmit = (data: WofRecord) => {
@@ -280,19 +160,27 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Icon name="Car01Icon" size={24} className="text-foreground" />
-              <CardTitle>WOF Management Dashboard</CardTitle>
+              <CardTitle>WoF Management Dashboard</CardTitle>
             </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <Dialog
+              open={isAddDialogOpen}
+              onOpenChange={(open) => {
+                setIsAddDialogOpen(open);
+                if (open) {
+                  reset({
+                    name: "",
+                    licensePlate: "",
+                    vehicleMake: "",
+                    expiryDate: new Date(),
+                  });
+                  setSelectedDate(undefined);
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button
-                  className="gap-2"
-                  onClick={() => {
-                    reset();
-                    setSelectedDate(undefined);
-                  }}
-                >
+                <Button className="gap-2">
                   <Icon name="Add01Icon" size={20} />
-                  Add WOF
+                  Add Vehicle
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -368,15 +256,24 @@ export default function Dashboard() {
 
                   <div className="space-y-2">
                     <Label htmlFor="expiryDate">Expiry Date *</Label>
+                    <input
+                      type="hidden"
+                      {...register("expiryDate", {
+                        required: "Expiry date is required",
+                      })}
+                    />
                     <Calendar
                       mode="single"
                       selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      className="rounded-md border"
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        if (date) setValue("expiryDate", date);
+                      }}
+                      className="rounded-md border w-[50%]"
                     />
-                    {!selectedDate && (
+                    {errors.expiryDate && (
                       <p className="text-sm text-destructive">
-                        Expiry date is required
+                        {errors.expiryDate.message}
                       </p>
                     )}
                   </div>
@@ -463,6 +360,7 @@ export default function Dashboard() {
                     )}
                   </div>
                 </TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -476,19 +374,53 @@ export default function Dashboard() {
                   <TableCell>{wof.vehicleMake}</TableCell>
                   <TableCell>{formatDate(wof.expiryDate)}</TableCell>
                   <TableCell>
+                    <Badge
+                      variant={
+                        getStatus(wof.expiryDate).variant as
+                          | "success"
+                          | "warning"
+                          | "destructive"
+                      }
+                    >
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      <Icon
+                        name={getStatus(wof.expiryDate).icon as any}
+                        size={14}
+                        className="mr-1"
+                      />
+                      {getStatus(wof.expiryDate).status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-2">
                       <Dialog
                         open={isEditDialogOpen}
-                        onOpenChange={setIsEditDialogOpen}
+                        onOpenChange={(open) => {
+                          setIsEditDialogOpen(open);
+                          if (!open) {
+                            setEditingRecord(null);
+                            reset();
+                            setSelectedDate(undefined);
+                          }
+                        }}
                       >
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => openEditDialog(wof)}
+                            onClick={() => {
+                              setEditingRecord(wof);
+                              setSelectedDate(wof.expiryDate);
+                              reset({
+                                name: wof.name,
+                                licensePlate: wof.licensePlate,
+                                vehicleMake: wof.vehicleMake,
+                                expiryDate: wof.expiryDate,
+                              });
+                            }}
                           >
-                            <Icon name="Edit02Icon" size={20} />
+                            <Icon name="Edit02Icon" size={16} />
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -570,15 +502,24 @@ export default function Dashboard() {
                               <Label htmlFor="edit-expiryDate">
                                 Expiry Date *
                               </Label>
+                              <input
+                                type="hidden"
+                                {...register("expiryDate", {
+                                  required: "Expiry date is required",
+                                })}
+                              />
                               <Calendar
                                 mode="single"
                                 selected={selectedDate}
-                                onSelect={setSelectedDate}
-                                className="rounded-md border"
+                                onSelect={(date) => {
+                                  setSelectedDate(date);
+                                  if (date) setValue("expiryDate", date);
+                                }}
+                                className="rounded-md border w-[50%]"
                               />
-                              {!selectedDate && (
+                              {errors.expiryDate && (
                                 <p className="text-sm text-destructive">
-                                  Expiry date is required
+                                  {errors.expiryDate.message}
                                 </p>
                               )}
                             </div>
