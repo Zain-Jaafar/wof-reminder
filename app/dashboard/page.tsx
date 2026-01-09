@@ -38,6 +38,25 @@ import { Calendar } from "@/components/ui/calendar";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
 import {
+  Car01Icon,
+  Add01Icon,
+  Search01Icon,
+  AArrowDown,
+  AArrowUp,
+  Calendar03Icon,
+  Edit02Icon,
+  Delete02Icon,
+  CheckmarkCircle01Icon,
+  Clock03Icon,
+  CancelCircleIcon,
+} from "@/components/ui/icons";
+
+const iconMap = {
+  CheckmarkCircle01Icon,
+  Clock03Icon,
+  CancelCircleIcon,
+} as const;
+import {
   WofRecord,
   nzVehicleMakes,
   initialWofData,
@@ -159,7 +178,7 @@ export default function Dashboard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Icon name="Car01Icon" size={24} className="text-foreground" />
+              <Icon icon={Car01Icon} size={24} className="text-foreground" />
               <CardTitle>WoF Management Dashboard</CardTitle>
             </div>
             <Dialog
@@ -179,7 +198,7 @@ export default function Dashboard() {
             >
               <DialogTrigger asChild>
                 <Button className="gap-2">
-                  <Icon name="Add01Icon" size={20} />
+                  <Icon icon={Add01Icon} size={20} />
                   Add Vehicle
                 </Button>
               </DialogTrigger>
@@ -297,7 +316,7 @@ export default function Dashboard() {
           <div className="mb-6">
             <div className="relative">
               <Icon
-                name="Search01Icon"
+                icon={Search01Icon}
                 size={20}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
@@ -322,7 +341,7 @@ export default function Dashboard() {
                     Name
                     {sortColumn === "name" && (
                       <Icon
-                        name={sortOrder === "asc" ? "AArrowDown" : "AArrowUp"}
+                        icon={sortOrder === "asc" ? AArrowDown : AArrowUp}
                         size={16}
                       />
                     )}
@@ -336,7 +355,7 @@ export default function Dashboard() {
                     License Plate
                     {sortColumn === "licensePlate" && (
                       <Icon
-                        name={sortOrder === "asc" ? "AArrowDown" : "AArrowUp"}
+                        icon={sortOrder === "asc" ? AArrowDown : AArrowUp}
                         size={16}
                       />
                     )}
@@ -349,12 +368,12 @@ export default function Dashboard() {
                 >
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1">
-                      <Icon name="Calendar03Icon" size={16} />
+                      <Icon icon={Calendar03Icon} size={16} />
                       Expiry Date
                     </div>
                     {sortColumn === "expiryDate" && (
                       <Icon
-                        name={sortOrder === "asc" ? "AArrowDown" : "AArrowUp"}
+                        icon={sortOrder === "asc" ? AArrowDown : AArrowUp}
                         size={16}
                       />
                     )}
@@ -382,9 +401,8 @@ export default function Dashboard() {
                           | "destructive"
                       }
                     >
-                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       <Icon
-                        name={getStatus(wof.expiryDate).icon as any}
+                        icon={iconMap[getStatus(wof.expiryDate).icon]}
                         size={14}
                         className="mr-1"
                       />
@@ -420,7 +438,7 @@ export default function Dashboard() {
                               });
                             }}
                           >
-                            <Icon name="Edit02Icon" size={16} />
+                            <Icon icon={Edit02Icon} size={16} />
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -551,7 +569,7 @@ export default function Dashboard() {
                             className="h-8 w-8 text-destructive"
                             onClick={() => setDeleteRecordId(wof.id)}
                           >
-                            <Icon name="Delete02Icon" size={16} />
+                            <Icon icon={Delete02Icon} size={16} />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>

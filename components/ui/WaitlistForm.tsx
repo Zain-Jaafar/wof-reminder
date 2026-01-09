@@ -6,7 +6,7 @@ import { api } from "../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/ui/icon";
-import { Mail01Icon } from "@hugeicons/core-free-icons";
+import { Mail01Icon } from "@/components/ui/icons";
 
 export default function WaitlistForm() {
   const [name, setName] = useState("");

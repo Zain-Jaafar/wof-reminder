@@ -12,7 +12,7 @@ export default function WaitlistCard() {
           <p className="mt-6 text-foreground max-w-xl">
             Tired of clients not coming over for a WoF in time?
             RoadworthyTracker automatically sends reminders at regular intervals
-            so you don't get any more rushed clients.
+            so you don&apos;t get any more rushed clients.
           </p>
         </div>
 

@@ -1,45 +1,30 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import * as FreeIcons from "@hugeicons/core-free-icons";
+import * as React from "react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { cn } from "@/lib/utils";
-import { ComponentProps, ReactNode } from "react";
 
-interface IconProps extends Omit<ComponentProps<typeof HugeiconsIcon>, "icon"> {
-  name: keyof typeof FreeIcons;
-  className?: string;
-  children?: ReactNode;
+interface IconProps {
+  icon: IconSvgElement;
   size?: number;
+  className?: string;
+  color?: string;
   strokeWidth?: number;
 }
 
-const Icon = ({
-  name,
-  className,
-  children,
+export function Icon({
+  icon,
   size = 24,
-  strokeWidth = 2,
-  ...props
-}: IconProps) => {
-  const iconComponent = FreeIcons[name];
-
-  if (!iconComponent) {
-    console.warn(
-      `Icon "${String(name)}" not found in @hugeicons/core-free-icons`,
-    );
-    return null;
-  }
-
+  className,
+  color = "currentColor",
+  strokeWidth = 1.5
+}: IconProps) {
   return (
     <HugeiconsIcon
-      icon={iconComponent}
+      icon={icon}
       size={size}
+      className={cn("inline-flex shrink-0", className)}
+      style={{ width: `${size}px`, height: `${size}px` }}
+      color={color}
       strokeWidth={strokeWidth}
-      className={cn("inline-block", className)}
-      {...props}
-    >
-      {children}
-    </HugeiconsIcon>
+    />
   );
-};
-
-export { Icon, FreeIcons };
-export type { IconProps };
+}
