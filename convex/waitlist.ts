@@ -23,3 +23,10 @@ export const add = mutation({
     });
   },
 });
+
+export const removeFieldMigration = mutation(async ({ db }) => {
+  const documents = await db.query("waitlist").collect();
+  for (const doc of documents) {
+    await db.patch(doc._id, { createdAt: undefined });
+  }
+});

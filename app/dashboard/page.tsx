@@ -49,7 +49,7 @@ import {
   CheckmarkCircle01Icon,
   Clock03Icon,
   CancelCircleIcon,
-} from "@/components/ui/icons";
+} from "@/lib/icons";
 
 const iconMap = {
   CheckmarkCircle01Icon,

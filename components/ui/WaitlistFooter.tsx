@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/icon";
-import { NewTwitterIcon } from "@/components/ui/icons";
+import { NewTwitterIcon } from "@/lib/icons";
 
 export default function WaitlistFooter() {
   return (
