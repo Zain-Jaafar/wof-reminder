@@ -12,3 +12,4 @@ export { CancelCircleIcon } from "@hugeicons/core-free-icons";
 export { Cancel01Icon } from "@hugeicons/core-free-icons";
 export { Mail01Icon } from "@hugeicons/core-free-icons";
 export { NewTwitterIcon } from "@hugeicons/core-free-icons";
+export { GoogleIcon } from "@hugeicons/core-free-icons";

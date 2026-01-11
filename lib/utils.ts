@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // WOF-related definitions
@@ -62,7 +62,7 @@ export const initialWofData: WofRecord[] = [
     name: "David Williams",
     licensePlate: "LMN456",
     vehicleMake: "Ford",
-    expiryDate: new Date("2026-05-10"),
+    expiryDate: new Date("2026-01-20"),
   },
   {
     id: "4",
@@ -76,7 +76,7 @@ export const initialWofData: WofRecord[] = [
     name: "Michael Davis",
     licensePlate: "GHI654",
     vehicleMake: "Nissan",
-    expiryDate: new Date("2026-07-19"),
+    expiryDate: new Date("2026-01-05"),
   },
   {
     id: "6",
@@ -125,19 +125,31 @@ export const formatDate = (date: Date): string => {
 type StatusVariant = "success" | "warning" | "destructive";
 type StatusIcon = "CheckmarkCircle01Icon" | "Clock03Icon" | "CancelCircleIcon";
 
-export const getStatus = (expiryDate: Date): { status: string; variant: StatusVariant; icon: StatusIcon } => {
+export const getStatus = (
+  expiryDate: Date,
+): { status: string; variant: StatusVariant; icon: StatusIcon } => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const expiry = new Date(expiryDate);
   expiry.setHours(0, 0, 0, 0);
 
-  const daysDiff = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const daysDiff = Math.ceil(
+    (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
 
   if (daysDiff < 0) {
-    return { status: "Expired", variant: "destructive", icon: "CancelCircleIcon" };
+    return {
+      status: "Expired",
+      variant: "destructive",
+      icon: "CancelCircleIcon",
+    };
   } else if (daysDiff <= 30) {
     return { status: "Expiring Soon", variant: "warning", icon: "Clock03Icon" };
   } else {
-    return { status: "Roadworthy", variant: "success", icon: "CheckmarkCircle01Icon" };
+    return {
+      status: "Roadworthy",
+      variant: "success",
+      icon: "CheckmarkCircle01Icon",
+    };
   }
 };

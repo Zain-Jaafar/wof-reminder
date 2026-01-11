@@ -8,7 +8,8 @@
  * @module
  */
 
-import type * as u from "../u.js";
+import type * as auth from "../auth.js";
+import type * as http from "../http.js";
 import type * as waitlist from "../waitlist.js";
 
 import type {
@@ -18,7 +19,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  u: typeof u;
+  auth: typeof auth;
+  http: typeof http;
   waitlist: typeof waitlist;
 }>;
 
