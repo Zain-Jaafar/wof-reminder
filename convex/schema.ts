@@ -19,7 +19,7 @@ export default defineSchema({
     email: v.string(),
   }).index("by_email", ["email"]),
   vehicles: defineTable({
-    userId: v.string(),
+    userId: v.id("users"),
     clientName: v.string(),
     clientPhoneNumber: v.string(),
     make: v.string(),
