@@ -41,7 +41,7 @@ export const getVehicles = query({
 
     await ctx.db
       .query("vehicles")
-      .filter((query) => query.eq(query.feild("userId"), userId))
+      .filter((query) => query.eq(query.field("userId"), userId))
       .collect();
   },
 });

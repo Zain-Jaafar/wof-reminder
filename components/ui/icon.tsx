@@ -15,7 +15,7 @@ export function Icon({
   size = 24,
   className,
   color = "currentColor",
-  strokeWidth = 1.5
+  strokeWidth = 2,
 }: IconProps) {
   return (
     <HugeiconsIcon
