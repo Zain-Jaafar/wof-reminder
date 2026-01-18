@@ -14,7 +14,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { WofRecord, nzVehicleMakes, reminderIntervalOptions, timestampToDate } from "@/lib/utils";
+import {
+  WofRecord,
+  nzVehicleMakes,
+  reminderIntervalOptions,
+  timestampToDate,
+} from "@/lib/utils";
 
 interface WofFormDialogProps {
   mode: "add" | "edit";
@@ -113,7 +118,9 @@ export function WofFormDialog({
               })}
             />
             {errors.clientName && (
-              <p className="text-sm text-destructive">{errors.clientName.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.clientName.message}
+              </p>
             )}
           </div>
 
@@ -170,9 +177,7 @@ export function WofFormDialog({
               ))}
             </select>
             {errors.make && (
-              <p className="text-sm text-destructive">
-                {errors.make.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.make.message}</p>
             )}
           </div>
 
@@ -203,7 +208,9 @@ export function WofFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${mode}-reminderInterval`}>Remind me *</Label>
+            <Label htmlFor={`${mode}-reminderInterval`}>
+              Remind clients (starts 1 month before expiry date) *
+            </Label>
             <select
               id={`${mode}-reminderInterval`}
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"

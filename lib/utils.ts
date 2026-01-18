@@ -28,7 +28,9 @@ export type VehicleFromConvex = {
   reminderInterval: number;
 };
 
-export const vehicleFromConvexToWofRecord = (vehicle: VehicleFromConvex): WofRecord => ({
+export const vehicleFromConvexToWofRecord = (
+  vehicle: VehicleFromConvex,
+): WofRecord => ({
   id: vehicle._id,
   clientName: vehicle.clientName,
   clientPhoneNumber: vehicle.clientPhoneNumber,
@@ -39,16 +41,15 @@ export const vehicleFromConvexToWofRecord = (vehicle: VehicleFromConvex): WofRec
 });
 
 export const reminderIntervalOptions = [
-  { value: 7, label: "1 week" },
-  { value: 14, label: "2 weeks" },
-  { value: 21, label: "3 weeks" },
-  { value: 30, label: "1 month" },
+  { value: 7, label: "every 7 days" },
+  { value: 14, label: "every 14 days" },
+  { value: 21, label: "every 21 days" },
+  { value: 30, label: "every 30 days" },
 ];
 
 export const dateToTimestamp = (date: Date): number => date.getTime();
 
-export const timestampToDate = (timestamp: number): Date =>
-  new Date(timestamp);
+export const timestampToDate = (timestamp: number): Date => new Date(timestamp);
 
 export const nzVehicleMakes = [
   "Toyota",
