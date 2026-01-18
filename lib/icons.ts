@@ -14,3 +14,4 @@ export { Mail01Icon } from "@hugeicons/core-free-icons";
 export { NewTwitterIcon } from "@hugeicons/core-free-icons";
 export { GoogleIcon } from "@hugeicons/core-free-icons";
 export { Loading02Icon } from "@hugeicons/core-free-icons";
+export { HelpCircleIcon } from "@hugeicons/core-free-icons";

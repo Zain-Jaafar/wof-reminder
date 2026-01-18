@@ -6,6 +6,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HelpCircleIcon } from "@/lib/icons";
 import {
   Dialog,
   DialogContent,
@@ -107,143 +115,167 @@ export function WofFormDialog({
               : "Update vehicle information."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-clientName`}>Client Name *</Label>
-            <Input
-              id={`${mode}-clientName`}
-              placeholder="Enter client name"
-              {...register("clientName", {
-                required: "Client name is required",
-              })}
-            />
-            {errors.clientName && (
-              <p className="text-sm text-destructive">
-                {errors.clientName.message}
-              </p>
-            )}
-          </div>
+        <TooltipProvider>
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor={`${mode}-clientName`}>Client Name *</Label>
+              <Input
+                id={`${mode}-clientName`}
+                placeholder="Enter client name"
+                {...register("clientName", {
+                  required: "Client name is required",
+                })}
+              />
+              {errors.clientName && (
+                <p className="text-sm text-destructive">
+                  {errors.clientName.message}
+                </p>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-clientPhoneNumber`}>Phone Number *</Label>
-            <Input
-              id={`${mode}-clientPhoneNumber`}
-              placeholder="e.g., 0211234567"
-              {...register("clientPhoneNumber", {
-                required: "Phone number is required",
-              })}
-            />
-            {errors.clientPhoneNumber && (
-              <p className="text-sm text-destructive">
-                {errors.clientPhoneNumber.message}
-              </p>
-            )}
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor={`${mode}-clientPhoneNumber`}>
+                Phone Number *
+              </Label>
+              <Input
+                id={`${mode}-clientPhoneNumber`}
+                placeholder="e.g., 0211234567"
+                {...register("clientPhoneNumber", {
+                  required: "Phone number is required",
+                })}
+              />
+              {errors.clientPhoneNumber && (
+                <p className="text-sm text-destructive">
+                  {errors.clientPhoneNumber.message}
+                </p>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-plateNumber`}>License Plate *</Label>
-            <Input
-              id={`${mode}-plateNumber`}
-              placeholder="e.g., ABC123"
-              {...register("plateNumber", {
-                required: "License plate is required",
-                minLength: {
-                  value: 3,
-                  message: "License plate must be at least 3 characters",
-                },
-              })}
-            />
-            {errors.plateNumber && (
-              <p className="text-sm text-destructive">
-                {errors.plateNumber.message}
-              </p>
-            )}
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor={`${mode}-plateNumber`}>License Plate *</Label>
+              <Input
+                id={`${mode}-plateNumber`}
+                placeholder="e.g., ABC123"
+                {...register("plateNumber", {
+                  required: "License plate is required",
+                  minLength: {
+                    value: 3,
+                    message: "License plate must be at least 3 characters",
+                  },
+                })}
+              />
+              {errors.plateNumber && (
+                <p className="text-sm text-destructive">
+                  {errors.plateNumber.message}
+                </p>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-make`}>Vehicle Make *</Label>
-            <select
-              id={`${mode}-make`}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              {...register("make", {
-                required: "Vehicle make is required",
-              })}
-            >
-              <option value="">Select vehicle make</option>
-              {nzVehicleMakes.map((make) => (
-                <option key={make} value={make}>
-                  {make}
-                </option>
-              ))}
-            </select>
-            {errors.make && (
-              <p className="text-sm text-destructive">{errors.make.message}</p>
-            )}
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor={`${mode}-make`}>Vehicle Make *</Label>
+              <select
+                id={`${mode}-make`}
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                {...register("make", {
+                  required: "Vehicle make is required",
+                })}
+              >
+                <option value="">Select vehicle make</option>
+                {nzVehicleMakes.map((make) => (
+                  <option key={make} value={make}>
+                    {make}
+                  </option>
+                ))}
+              </select>
+              {errors.make && (
+                <p className="text-sm text-destructive">
+                  {errors.make.message}
+                </p>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-expiryDate`}>WOF Expiry Date *</Label>
-            <input
-              type="hidden"
-              {...register("expiryDate", {
-                required: "Expiry date is required",
-              })}
-            />
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => {
-                if (date) {
-                  setSelectedDate(date);
-                  setValue("expiryDate", date.getTime());
-                }
-              }}
-              className="rounded-md border w-[50%]"
-            />
-            {errors.expiryDate && (
-              <p className="text-sm text-destructive">
-                {errors.expiryDate.message}
-              </p>
-            )}
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor={`${mode}-expiryDate`}>WOF Expiry Date *</Label>
+              <input
+                type="hidden"
+                {...register("expiryDate", {
+                  required: "Expiry date is required",
+                })}
+              />
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => {
+                  if (date) {
+                    setSelectedDate(date);
+                    setValue("expiryDate", date.getTime());
+                  }
+                }}
+                className="rounded-md border w-[50%]"
+              />
+              {errors.expiryDate && (
+                <p className="text-sm text-destructive">
+                  {errors.expiryDate.message}
+                </p>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={`${mode}-reminderInterval`}>
-              Remind clients (starts 1 month before expiry date) *
-            </Label>
-            <select
-              id={`${mode}-reminderInterval`}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              {...register("reminderInterval", {
-                required: "Reminder interval is required",
-              })}
-            >
-              {reminderIntervalOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label} before expiry
-                </option>
-              ))}
-            </select>
-            {errors.reminderInterval && (
-              <p className="text-sm text-destructive">
-                {errors.reminderInterval.message}
-              </p>
-            )}
-          </div>
+            <div className="space-y-2">
+              <Label
+                htmlFor={`${mode}-reminderInterval`}
+                className="inline-flex items-center"
+              >
+                Remind clients * <span className="w-2"></span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 p-0"
+                    >
+                      <Icon icon={HelpCircleIcon} size={16} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    Reminders begin one month before the expiry date
+                  </TooltipContent>
+                </Tooltip>
+              </Label>
+              <select
+                id={`${mode}-reminderInterval`}
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                {...register("reminderInterval", {
+                  required: "Reminder interval is required",
+                })}
+              >
+                {reminderIntervalOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label} before expiry
+                  </option>
+                ))}
+              </select>
+              {errors.reminderInterval && (
+                <p className="text-sm text-destructive">
+                  {errors.reminderInterval.message}
+                </p>
+              )}
+            </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">
-              {mode === "add" ? "Add Vehicle" : "Save Changes"}
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">
+                {mode === "add" ? "Add Vehicle" : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </TooltipProvider>
       </DialogContent>
     </Dialog>
   );
