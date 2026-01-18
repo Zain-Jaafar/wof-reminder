@@ -8,11 +8,47 @@ export function cn(...inputs: ClassValue[]) {
 // WOF-related definitions
 export type WofRecord = {
   id: string;
-  name: string;
-  licensePlate: string;
-  vehicleMake: string;
-  expiryDate: Date;
+  clientName: string;
+  clientPhoneNumber: string;
+  plateNumber: string;
+  make: string;
+  expiryDate: number; // Unix timestamp in milliseconds
+  reminderInterval: number; // Days before expiry to send reminder
 };
+
+export type VehicleFromConvex = {
+  _id: string;
+  _creationTime: number;
+  userId: string;
+  clientName: string;
+  clientPhoneNumber: string;
+  make: string;
+  plateNumber: string;
+  expiryDate: number;
+  reminderInterval: number;
+};
+
+export const vehicleFromConvexToWofRecord = (vehicle: VehicleFromConvex): WofRecord => ({
+  id: vehicle._id,
+  clientName: vehicle.clientName,
+  clientPhoneNumber: vehicle.clientPhoneNumber,
+  plateNumber: vehicle.plateNumber,
+  make: vehicle.make,
+  expiryDate: vehicle.expiryDate,
+  reminderInterval: vehicle.reminderInterval,
+});
+
+export const reminderIntervalOptions = [
+  { value: 7, label: "1 week" },
+  { value: 14, label: "2 weeks" },
+  { value: 21, label: "3 weeks" },
+  { value: 30, label: "1 month" },
+];
+
+export const dateToTimestamp = (date: Date): number => date.getTime();
+
+export const timestampToDate = (timestamp: number): Date =>
+  new Date(timestamp);
 
 export const nzVehicleMakes = [
   "Toyota",
@@ -45,77 +81,98 @@ export const nzVehicleMakes = [
 export const initialWofData: WofRecord[] = [
   {
     id: "1",
-    name: "John Smith",
-    licensePlate: "ABC123",
-    vehicleMake: "Toyota",
-    expiryDate: new Date("2026-03-15"),
+    clientName: "John Smith",
+    clientPhoneNumber: "0211234567",
+    plateNumber: "ABC123",
+    make: "Toyota",
+    expiryDate: new Date("2026-03-15").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "2",
-    name: "Mary Johnson",
-    licensePlate: "XYZ789",
-    vehicleMake: "Honda",
-    expiryDate: new Date("2026-04-22"),
+    clientName: "Mary Johnson",
+    clientPhoneNumber: "0221234567",
+    plateNumber: "XYZ789",
+    make: "Honda",
+    expiryDate: new Date("2026-04-22").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "3",
-    name: "David Williams",
-    licensePlate: "LMN456",
-    vehicleMake: "Ford",
-    expiryDate: new Date("2026-01-20"),
+    clientName: "David Williams",
+    clientPhoneNumber: "0271234567",
+    plateNumber: "LMN456",
+    make: "Ford",
+    expiryDate: new Date("2026-01-20").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "4",
-    name: "Sarah Brown",
-    licensePlate: "DEF321",
-    vehicleMake: "Mazda",
-    expiryDate: new Date("2026-06-08"),
+    clientName: "Sarah Brown",
+    clientPhoneNumber: "0212345678",
+    plateNumber: "DEF321",
+    make: "Mazda",
+    expiryDate: new Date("2026-06-08").getTime(),
+    reminderInterval: 14,
   },
   {
     id: "5",
-    name: "Michael Davis",
-    licensePlate: "GHI654",
-    vehicleMake: "Nissan",
-    expiryDate: new Date("2026-01-05"),
+    clientName: "Michael Davis",
+    clientPhoneNumber: "0222345678",
+    plateNumber: "GHI654",
+    make: "Nissan",
+    expiryDate: new Date("2026-01-05").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "6",
-    name: "Emily Wilson",
-    licensePlate: "JKL987",
-    vehicleMake: "Subaru",
-    expiryDate: new Date("2026-08-30"),
+    clientName: "Emily Wilson",
+    clientPhoneNumber: "0272345678",
+    plateNumber: "JKL987",
+    make: "Subaru",
+    expiryDate: new Date("2026-08-30").getTime(),
+    reminderInterval: 14,
   },
   {
     id: "7",
-    name: "James Taylor",
-    licensePlate: "PQR147",
-    vehicleMake: "Mitsubishi",
-    expiryDate: new Date("2026-09-05"),
+    clientName: "James Taylor",
+    clientPhoneNumber: "0213456789",
+    plateNumber: "PQR147",
+    make: "Mitsubishi",
+    expiryDate: new Date("2026-09-05").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "8",
-    name: "Linda Anderson",
-    licensePlate: "STU258",
-    vehicleMake: "Suzuki",
-    expiryDate: new Date("2026-10-12"),
+    clientName: "Linda Anderson",
+    clientPhoneNumber: "0223456789",
+    plateNumber: "STU258",
+    make: "Suzuki",
+    expiryDate: new Date("2026-10-12").getTime(),
+    reminderInterval: 14,
   },
   {
     id: "9",
-    name: "Robert Martinez",
-    licensePlate: "VWX369",
-    vehicleMake: "Kia",
-    expiryDate: new Date("2026-11-20"),
+    clientName: "Robert Martinez",
+    clientPhoneNumber: "0273456789",
+    plateNumber: "VWX369",
+    make: "Kia",
+    expiryDate: new Date("2026-11-20").getTime(),
+    reminderInterval: 7,
   },
   {
     id: "10",
-    name: "Jennifer Garcia",
-    licensePlate: "YZA741",
-    vehicleMake: "Hyundai",
-    expiryDate: new Date("2026-12-15"),
+    clientName: "Jennifer Garcia",
+    clientPhoneNumber: "0214567890",
+    plateNumber: "YZA741",
+    make: "Hyundai",
+    expiryDate: new Date("2026-12-15").getTime(),
+    reminderInterval: 30,
   },
 ];
 
-export const formatDate = (date: Date): string => {
+export const formatDate = (timestamp: number): string => {
+  const date = new Date(timestamp);
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const year = date.getFullYear();
@@ -126,11 +183,11 @@ type StatusVariant = "success" | "warning" | "destructive";
 type StatusIcon = "CheckmarkCircle01Icon" | "Clock03Icon" | "CancelCircleIcon";
 
 export const getStatus = (
-  expiryDate: Date,
+  expiryTimestamp: number,
 ): { status: string; variant: StatusVariant; icon: StatusIcon } => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const expiry = new Date(expiryDate);
+  const expiry = new Date(expiryTimestamp);
   expiry.setHours(0, 0, 0, 0);
 
   const daysDiff = Math.ceil(

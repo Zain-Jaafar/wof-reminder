@@ -1,34 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { useConvexAuth } from "convex/react";
+import { useRouter } from "next/navigation";
+import { api } from "@/convex/_generated/api";
 import { Card, CardContent } from "@/components/ui/card";
-import { WofRecord, initialWofData } from "@/lib/utils";
+import { WofRecord, vehicleFromConvexToWofRecord } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SearchInput } from "@/components/dashboard/SearchInput";
 import { WofTable } from "@/components/dashboard/WofTable";
+import { Loading02Icon } from "@/lib/icons";
+import { Icon } from "@/components/ui/icon";
+import { Id } from "@/convex/_generated/dataModel";
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="flex flex-col items-center gap-4">
+        <Icon
+          icon={Loading02Icon}
+          size={48}
+          strokeWidth={1}
+          className="animate-spin text-primary"
+        />
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+function UnauthenticatedScreen() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardContent className="flex flex-col items-center justify-center p-8 text-center gap-4">
+          <p className="text-muted-foreground">
+            Please sign in to access the dashboard.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [wofData, setWofData] = useState<WofRecord[]>(initialWofData);
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth();
+  const router = useRouter();
+  const vehicles = useQuery(api.vehicles.getVehicles);
+  const createVehicle = useMutation(api.vehicles.createVehicle);
+  const updateVehicle = useMutation(api.vehicles.updateVehicle);
+  const deleteVehicle = useMutation(api.vehicles.deleteVehicle);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [sortColumn, setSortColumn] = useState<
-    "name" | "licensePlate" | "expiryDate"
+    "clientName" | "plateNumber" | "expiryDate"
   >("expiryDate");
+
+  const isDataLoading = vehicles === undefined;
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
+
+  if (isAuthLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <UnauthenticatedScreen />;
+  }
+
+  const wofData: WofRecord[] = (vehicles || []).map(
+    vehicleFromConvexToWofRecord,
+  );
 
   const filteredData = wofData.filter(
     (wof) =>
-      wof.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      wof.licensePlate.toLowerCase().includes(searchQuery.toLowerCase()),
+      wof.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      wof.plateNumber.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const sortedData = [...filteredData].sort((a, b) => {
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
 
-    if (aValue instanceof Date && bValue instanceof Date) {
-      return sortOrder === "asc"
-        ? aValue.getTime() - bValue.getTime()
-        : bValue.getTime() - aValue.getTime();
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
     }
 
     if (typeof aValue === "string" && typeof bValue === "string") {
@@ -40,7 +101,7 @@ export default function Dashboard() {
     return 0;
   });
 
-  const handleSort = (column: "name" | "licensePlate" | "expiryDate") => {
+  const handleSort = (column: "clientName" | "plateNumber" | "expiryDate") => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -49,30 +110,38 @@ export default function Dashboard() {
     }
   };
 
-  const handleAdd = (data: WofRecord) => {
-    const maxId = Math.max(...wofData.map((r) => parseInt(r.id)), 0);
-    const newId = (maxId + 1).toString();
-
-    const newRecord: WofRecord = {
-      ...data,
-      id: newId,
-    };
-    setWofData([...wofData, newRecord]);
+  const handleAdd = async (data: WofRecord) => {
+    await createVehicle({
+      clientName: data.clientName,
+      clientPhoneNumber: data.clientPhoneNumber,
+      plateNumber: data.plateNumber,
+      make: data.make,
+      expiryDate: data.expiryDate,
+      reminderInterval: data.reminderInterval,
+    });
   };
 
-  const handleEdit = (record: WofRecord) => {
-    const updatedData = wofData.map((r) => (r.id === record.id ? record : r));
-    setWofData(updatedData);
+  const handleEdit = async (record: WofRecord) => {
+    if (!record.id) return;
+    await updateVehicle({
+      id: record.id as Id<"vehicles">,
+      clientName: record.clientName,
+      clientPhoneNumber: record.clientPhoneNumber,
+      plateNumber: record.plateNumber,
+      make: record.make,
+      expiryDate: record.expiryDate,
+      reminderInterval: record.reminderInterval,
+    });
   };
 
-  const handleDelete = (id: string) => {
-    setWofData(wofData.filter((record) => record.id !== id));
+  const handleDelete = async (id: string) => {
+    await deleteVehicle({ id: id as Id<"vehicles"> });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-6xl">
-        <DashboardHeader onAdd={handleAdd} />
+        <DashboardHeader onAdd={handleAdd} isLoading={isDataLoading} />
         <CardContent>
           <SearchInput value={searchQuery} onChange={setSearchQuery} />
           <WofTable

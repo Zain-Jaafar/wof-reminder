@@ -10,9 +10,10 @@ import { Add01Icon, Car01Icon } from "@/lib/icons";
 
 interface DashboardHeaderProps {
   onAdd: (data: WofRecord) => void;
+  isLoading?: boolean;
 }
 
-export function DashboardHeader({ onAdd }: DashboardHeaderProps) {
+export function DashboardHeader({ onAdd, isLoading }: DashboardHeaderProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   return (
@@ -30,7 +31,7 @@ export function DashboardHeader({ onAdd }: DashboardHeaderProps) {
           setIsAddDialogOpen(false);
         }}
         trigger={
-          <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)}>
+          <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)} disabled={isLoading}>
             <Icon icon={Add01Icon} size={20} />
             Add Vehicle
           </Button>

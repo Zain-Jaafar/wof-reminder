@@ -19,9 +19,9 @@ import { AArrowDown, AArrowUp, Calendar03Icon, Delete02Icon, Edit02Icon } from "
 
 interface WofTableProps {
   data: WofRecord[];
-  sortColumn: "name" | "licensePlate" | "expiryDate";
+  sortColumn: "clientName" | "plateNumber" | "expiryDate";
   sortOrder: "asc" | "desc";
-  onSort: (column: "name" | "licensePlate" | "expiryDate") => void;
+  onSort: (column: "clientName" | "plateNumber" | "expiryDate") => void;
   onEdit: (record: WofRecord) => void;
   onDelete: (id: string) => void;
 }
@@ -64,7 +64,7 @@ export function WofTable({
 
   const handleDeleteClick = (record: WofRecord) => {
     setDeleteRecordId(record.id);
-    setDeleteClientName(record.name);
+    setDeleteClientName(record.clientName);
     setIsDeleteDialogOpen(true);
   };
 
@@ -75,11 +75,11 @@ export function WofTable({
           <TableRow>
             <TableHead
               className="cursor-pointer hover:bg-muted/50"
-              onClick={() => onSort("name")}
+              onClick={() => onSort("clientName")}
             >
               <div className="flex items-center gap-2">
                 Name
-                {sortColumn === "name" && (
+                {sortColumn === "clientName" && (
                   <Icon
                     icon={sortOrder === "asc" ? AArrowDown : AArrowUp}
                     size={16}
@@ -89,11 +89,11 @@ export function WofTable({
             </TableHead>
             <TableHead
               className="cursor-pointer hover:bg-muted/50"
-              onClick={() => onSort("licensePlate")}
+              onClick={() => onSort("plateNumber")}
             >
               <div className="flex items-center gap-2">
                 License Plate
-                {sortColumn === "licensePlate" && (
+                {sortColumn === "plateNumber" && (
                   <Icon
                     icon={sortOrder === "asc" ? AArrowDown : AArrowUp}
                     size={16}
@@ -124,12 +124,12 @@ export function WofTable({
         <TableBody>
           {data.map((wof) => (
             <TableRow key={wof.id}>
-              <TableCell>{wof.name}</TableCell>
-              <TableCell className="font-medium">{wof.licensePlate}</TableCell>
-              <TableCell>{wof.vehicleMake}</TableCell>
+              <TableCell>{wof.clientName}</TableCell>
+              <TableCell className="font-medium">{wof.plateNumber}</TableCell>
+              <TableCell>{wof.make}</TableCell>
               <TableCell>{formatDate(wof.expiryDate)}</TableCell>
               <TableCell>
-                <StatusBadge expiryDate={wof.expiryDate} />
+                <StatusBadge expiryTimestamp={wof.expiryDate} />
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">

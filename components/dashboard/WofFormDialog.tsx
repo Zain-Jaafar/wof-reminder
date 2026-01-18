@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { WofRecord, nzVehicleMakes } from "@/lib/utils";
+import { WofRecord, nzVehicleMakes, reminderIntervalOptions, timestampToDate } from "@/lib/utils";
 
 interface WofFormDialogProps {
   mode: "add" | "edit";
@@ -33,6 +33,15 @@ export function WofFormDialog({
   onSubmit,
   trigger,
 }: WofFormDialogProps) {
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    if (mode === "edit" && initialData?.expiryDate) {
+      return timestampToDate(initialData.expiryDate);
+    }
+    return new Date();
+  });
+
+  const defaultExpiryTimestamp = useState<number>(() => Date.now())[0];
+
   const {
     register,
     handleSubmit,
@@ -41,10 +50,12 @@ export function WofFormDialog({
     formState: { errors },
   } = useForm<WofRecord>({
     defaultValues: {
-      name: "",
-      licensePlate: "",
-      vehicleMake: "",
-      expiryDate: new Date(),
+      clientName: "",
+      clientPhoneNumber: "",
+      plateNumber: "",
+      make: "",
+      expiryDate: defaultExpiryTimestamp,
+      reminderInterval: 7,
     },
   });
 
@@ -52,17 +63,21 @@ export function WofFormDialog({
     if (open) {
       if (mode === "edit" && initialData) {
         reset({
-          name: initialData.name,
-          licensePlate: initialData.licensePlate,
-          vehicleMake: initialData.vehicleMake,
+          clientName: initialData.clientName,
+          clientPhoneNumber: initialData.clientPhoneNumber,
+          plateNumber: initialData.plateNumber,
+          make: initialData.make,
           expiryDate: initialData.expiryDate,
+          reminderInterval: initialData.reminderInterval,
         });
       } else {
         reset({
-          name: "",
-          licensePlate: "",
-          vehicleMake: "",
-          expiryDate: new Date(),
+          clientName: "",
+          clientPhoneNumber: "",
+          plateNumber: "",
+          make: "",
+          expiryDate: Date.now(),
+          reminderInterval: 7,
         });
       }
     }
@@ -74,40 +89,56 @@ export function WofFormDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog key={`${mode}-${open}`} open={open} onOpenChange={onOpenChange}>
       {trigger}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {mode === "add" ? "Add New WOF Record" : "Edit WOF Record"}
+            {mode === "add" ? "Add New Vehicle" : "Edit Vehicle"}
           </DialogTitle>
           <DialogDescription>
             {mode === "add"
-              ? "Enter details for a new client's WOF record."
-              : "Update client's WOF record information."}
+              ? "Enter details for a new client's vehicle."
+              : "Update vehicle information."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor={`${mode}-name`}>Client Name *</Label>
+            <Label htmlFor={`${mode}-clientName`}>Client Name *</Label>
             <Input
-              id={`${mode}-name`}
+              id={`${mode}-clientName`}
               placeholder="Enter client name"
-              {...register("name", {
+              {...register("clientName", {
                 required: "Client name is required",
               })}
             />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
+            {errors.clientName && (
+              <p className="text-sm text-destructive">{errors.clientName.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${mode}-licensePlate`}>License Plate *</Label>
+            <Label htmlFor={`${mode}-clientPhoneNumber`}>Phone Number *</Label>
             <Input
-              id={`${mode}-licensePlate`}
+              id={`${mode}-clientPhoneNumber`}
+              placeholder="e.g., 0211234567"
+              {...register("clientPhoneNumber", {
+                required: "Phone number is required",
+              })}
+            />
+            {errors.clientPhoneNumber && (
+              <p className="text-sm text-destructive">
+                {errors.clientPhoneNumber.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor={`${mode}-plateNumber`}>License Plate *</Label>
+            <Input
+              id={`${mode}-plateNumber`}
               placeholder="e.g., ABC123"
-              {...register("licensePlate", {
+              {...register("plateNumber", {
                 required: "License plate is required",
                 minLength: {
                   value: 3,
@@ -115,19 +146,19 @@ export function WofFormDialog({
                 },
               })}
             />
-            {errors.licensePlate && (
+            {errors.plateNumber && (
               <p className="text-sm text-destructive">
-                {errors.licensePlate.message}
+                {errors.plateNumber.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${mode}-vehicleMake`}>Vehicle Make *</Label>
+            <Label htmlFor={`${mode}-make`}>Vehicle Make *</Label>
             <select
-              id={`${mode}-vehicleMake`}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              {...register("vehicleMake", {
+              id={`${mode}-make`}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              {...register("make", {
                 required: "Vehicle make is required",
               })}
             >
@@ -138,15 +169,15 @@ export function WofFormDialog({
                 </option>
               ))}
             </select>
-            {errors.vehicleMake && (
+            {errors.make && (
               <p className="text-sm text-destructive">
-                {errors.vehicleMake.message}
+                {errors.make.message}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`${mode}-expiryDate`}>Expiry Date *</Label>
+            <Label htmlFor={`${mode}-expiryDate`}>WOF Expiry Date *</Label>
             <input
               type="hidden"
               {...register("expiryDate", {
@@ -155,15 +186,40 @@ export function WofFormDialog({
             />
             <Calendar
               mode="single"
-              selected={undefined}
+              selected={selectedDate}
               onSelect={(date) => {
-                if (date) setValue("expiryDate", date);
+                if (date) {
+                  setSelectedDate(date);
+                  setValue("expiryDate", date.getTime());
+                }
               }}
               className="rounded-md border w-[50%]"
             />
             {errors.expiryDate && (
               <p className="text-sm text-destructive">
                 {errors.expiryDate.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor={`${mode}-reminderInterval`}>Remind me *</Label>
+            <select
+              id={`${mode}-reminderInterval`}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              {...register("reminderInterval", {
+                required: "Reminder interval is required",
+              })}
+            >
+              {reminderIntervalOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label} before expiry
+                </option>
+              ))}
+            </select>
+            {errors.reminderInterval && (
+              <p className="text-sm text-destructive">
+                {errors.reminderInterval.message}
               </p>
             )}
           </div>
@@ -177,7 +233,7 @@ export function WofFormDialog({
               Cancel
             </Button>
             <Button type="submit">
-              {mode === "add" ? "Add WOF" : "Save Changes"}
+              {mode === "add" ? "Add Vehicle" : "Save Changes"}
             </Button>
           </DialogFooter>
         </form>

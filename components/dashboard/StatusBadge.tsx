@@ -8,7 +8,7 @@ import {
 import { getStatus } from "@/lib/utils";
 
 interface StatusBadgeProps {
-  expiryDate: Date;
+  expiryTimestamp: number;
 }
 
 const iconMap = {
@@ -17,8 +17,8 @@ const iconMap = {
   CancelCircleIcon,
 } as const;
 
-export function StatusBadge({ expiryDate }: StatusBadgeProps) {
-  const status = getStatus(expiryDate);
+export function StatusBadge({ expiryTimestamp }: StatusBadgeProps) {
+  const status = getStatus(expiryTimestamp);
 
   return (
     <Badge
