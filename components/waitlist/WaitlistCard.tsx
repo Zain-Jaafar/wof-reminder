@@ -1,4 +1,4 @@
-import WaitlistForm from "@/components/ui/WaitlistForm";
+import WaitlistForm from "@/components/waitlist/WaitlistForm";
 
 export default function WaitlistCard() {
   return (

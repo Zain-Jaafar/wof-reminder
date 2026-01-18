@@ -1,5 +1,5 @@
-import WaitlistCard from "../components/ui/WaitlistCard";
-import WaitlistFooter from "../components/ui/WaitlistFooter";
+import WaitlistCard from "@/components/waitlist/WaitlistCard";
+import WaitlistFooter from "@/components/waitlist/WaitlistFooter";
 
 export default function Home() {
   return (

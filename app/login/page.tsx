@@ -1,8 +1,8 @@
 "use client";
 
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
-import SignIn from "@/components/ui/SignIn";
-import SignOut from "@/components/ui/SignOut";
+import SignIn from "@/components/login/SignIn";
+import SignOut from "@/components/login/SignOut";
 
 export default function LoginPage() {
   return (
