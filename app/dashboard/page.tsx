@@ -101,6 +101,9 @@ export default function Dashboard() {
     return 0;
   });
 
+  const hasVehicles = sortedData.length > 0;
+  const hasAnyVehicles = wofData.length > 0;
+
   const handleSort = (column: "clientName" | "plateNumber" | "expiryDate") => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -141,7 +144,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-6xl">
-        <DashboardHeader onAdd={handleAdd} isLoading={isDataLoading} />
+        <DashboardHeader onAdd={handleAdd} isLoading={isDataLoading} hasVehicles={hasVehicles} />
         <CardContent>
           <SearchInput value={searchQuery} onChange={setSearchQuery} />
           <WofTable
@@ -151,6 +154,8 @@ export default function Dashboard() {
             onSort={handleSort}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onAdd={handleAdd}
+            hasAnyVehicles={hasAnyVehicles}
           />
         </CardContent>
       </Card>

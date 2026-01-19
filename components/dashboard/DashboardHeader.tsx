@@ -11,9 +11,10 @@ import { Add01Icon, Car01Icon } from "@/lib/icons";
 interface DashboardHeaderProps {
   onAdd: (data: WofRecord) => void;
   isLoading?: boolean;
+  hasVehicles?: boolean;
 }
 
-export function DashboardHeader({ onAdd, isLoading }: DashboardHeaderProps) {
+export function DashboardHeader({ onAdd, isLoading, hasVehicles }: DashboardHeaderProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   return (
@@ -22,21 +23,23 @@ export function DashboardHeader({ onAdd, isLoading }: DashboardHeaderProps) {
         <Icon icon={Car01Icon} size={24} className="text-foreground" />
         <CardTitle>WoF Management Dashboard</CardTitle>
       </div>
-      <WofFormDialog
-        mode="add"
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-        onSubmit={(data) => {
-          onAdd(data);
-          setIsAddDialogOpen(false);
-        }}
-        trigger={
-          <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)} disabled={isLoading}>
-            <Icon icon={Add01Icon} size={20} />
-            Add Vehicle
-          </Button>
-        }
-      />
+      {hasVehicles && (
+        <WofFormDialog
+          mode="add"
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+          onSubmit={(data) => {
+            onAdd(data);
+            setIsAddDialogOpen(false);
+          }}
+          trigger={
+            <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)} disabled={isLoading}>
+              <Icon icon={Add01Icon} size={20} />
+              Add Vehicle
+            </Button>
+          }
+        />
+      )}
     </div>
   );
 }
