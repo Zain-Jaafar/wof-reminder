@@ -23,7 +23,16 @@ import { WofRecord, formatDate } from "@/lib/utils";
 import { StatusBadge } from "./StatusBadge";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import { WofFormDialog } from "./WofFormDialog";
-import { AArrowDown, AArrowUp, Calendar03Icon, Delete02Icon, Edit02Icon, Car01Icon, Add01Icon, Search01Icon } from "@/lib/icons";
+import {
+  AArrowDown,
+  AArrowUp,
+  Calendar03Icon,
+  Delete02Icon,
+  Edit02Icon,
+  Car01Icon,
+  Add01Icon,
+  Search01Icon,
+} from "@/lib/icons";
 
 interface WofTableProps {
   data: WofRecord[];
@@ -94,7 +103,10 @@ export function WofTable({
         <Empty className="py-12">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <Icon icon={hasAnyVehicles ? Search01Icon : Car01Icon} size={48} />
+              <Icon
+                icon={hasAnyVehicles ? Search01Icon : Car01Icon}
+                size={48}
+              />
             </EmptyMedia>
             <EmptyTitle>
               {hasAnyVehicles ? "No Results Found" : "No Vehicles Added"}
@@ -102,7 +114,7 @@ export function WofTable({
             <EmptyDescription>
               {hasAnyVehicles
                 ? "Try clearing your search or adjusting your filters."
-                : "You haven&apos;t added any vehicles yet. Get started by adding your first vehicle."}
+                : "You haven't added any vehicles yet. Get started by adding your first vehicle."}
             </EmptyDescription>
           </EmptyHeader>
           {!hasAnyVehicles && onAdd && (
@@ -113,7 +125,10 @@ export function WofTable({
                 onOpenChange={setIsAddDialogOpen}
                 onSubmit={handleAddSubmit}
                 trigger={
-                  <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)}>
+                  <Button
+                    className="gap-2"
+                    onClick={() => setIsAddDialogOpen(true)}
+                  >
                     <Icon icon={Add01Icon} size={20} />
                     Add Vehicle
                   </Button>

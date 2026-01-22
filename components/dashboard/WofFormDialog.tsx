@@ -115,7 +115,7 @@ export function WofFormDialog({
               : "Update vehicle information."}
           </DialogDescription>
         </DialogHeader>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={100}>
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor={`${mode}-clientName`}>Client Name *</Label>
@@ -252,7 +252,7 @@ export function WofFormDialog({
               >
                 {reminderIntervalOptions.map((option) => (
                   <option key={option.value} value={option.value}>
-                    {option.label} before expiry
+                    {option.label}
                   </option>
                 ))}
               </select>
