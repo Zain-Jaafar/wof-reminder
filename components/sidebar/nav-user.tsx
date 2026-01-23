@@ -1,6 +1,6 @@
 "use client";
 
-import { UnfoldMoreIcon, LogoutSquare01Icon } from "@/lib/icons";
+import { UnfoldMoreIcon, LogoutSquare01Icon, Settings05Icon } from "@/lib/icons";
 
 import { Icon } from "@/components/ui/icon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,12 +32,14 @@ function getInitials(name: string): string {
 
 export function NavUser({
   user,
+  onSettingsClick,
 }: {
   user: {
     name: string;
     email: string;
     avatar?: string;
   };
+  onSettingsClick: () => void;
 }) {
   const { isMobile } = useSidebar();
   const { signOut } = useAuthActions();
@@ -95,6 +97,10 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onSettingsClick}>
+              <Icon icon={Settings05Icon} />
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout}>
               <Icon icon={LogoutSquare01Icon} />
               Log out

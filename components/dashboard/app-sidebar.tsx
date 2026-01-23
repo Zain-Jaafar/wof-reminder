@@ -17,7 +17,6 @@ import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import {
   DashboardSquare02Icon,
   Calendar03Icon,
-  Settings05Icon,
 } from "@/lib/icons";
 import { Icon } from "@/components/ui/icon";
 import { useQuery } from "convex/react";
@@ -90,18 +89,12 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => setIsSettingsOpen(true)}>
-                    <Icon icon={Settings05Icon} strokeWidth={1.5} />
-                    <span>Settings</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={userObject} />
+          <NavUser user={userObject} onSettingsClick={() => setIsSettingsOpen(true)} />
         </SidebarFooter>
       </Sidebar>
       <SettingsDialog
