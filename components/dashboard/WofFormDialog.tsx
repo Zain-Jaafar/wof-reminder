@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icon } from "@/components/ui/icon";
+import { DatePickerInput } from "@/components/ui/datepicker";
 import {
   Tooltip,
   TooltipContent,
@@ -46,20 +46,14 @@ export function WofFormDialog({
   onSubmit,
   trigger,
 }: WofFormDialogProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (mode === "edit" && initialData?.expiryDate) {
-      return timestampToDate(initialData.expiryDate);
-    }
-    return new Date();
-  });
-
-  const defaultExpiryTimestamp = useState<number>(() => Date.now())[0];
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<WofRecord>({
     defaultValues: {
@@ -67,7 +61,6 @@ export function WofFormDialog({
       clientPhoneNumber: "",
       plateNumber: "",
       make: "",
-      expiryDate: defaultExpiryTimestamp,
       reminderInterval: 7,
     },
   });
@@ -95,6 +88,14 @@ export function WofFormDialog({
       }
     }
   }, [open, mode, initialData, reset]);
+
+  const expiryDate = watch("expiryDate");
+
+  useEffect(() => {
+    if (expiryDate) {
+      setSelectedDate(timestampToDate(expiryDate));
+    }
+  }, [expiryDate, setSelectedDate]);
 
   const handleFormSubmit = (data: WofRecord) => {
     onSubmit(data);
@@ -196,28 +197,22 @@ export function WofFormDialog({
 
             <div className="space-y-2">
               <Label htmlFor={`${mode}-expiryDate`}>WOF Expiry Date *</Label>
+              <DatePickerInput
+                value={selectedDate?.getTime() || null}
+                onChange={(timestamp) => {
+                  const date = new Date(timestamp);
+                  setSelectedDate(date);
+                  setValue("expiryDate", timestamp);
+                }}
+                error={errors.expiryDate?.message}
+                placeholder="DD/MM/YYYY"
+              />
               <input
                 type="hidden"
                 {...register("expiryDate", {
                   required: "Expiry date is required",
                 })}
               />
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => {
-                  if (date) {
-                    setSelectedDate(date);
-                    setValue("expiryDate", date.getTime());
-                  }
-                }}
-                className="rounded-md border w-[50%]"
-              />
-              {errors.expiryDate && (
-                <p className="text-sm text-destructive">
-                  {errors.expiryDate.message}
-                </p>
-              )}
             </div>
 
             <div className="space-y-2">

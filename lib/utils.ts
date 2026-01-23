@@ -180,6 +180,47 @@ export const formatDate = (timestamp: number): string => {
   return `${day}/${month}/${year}`;
 };
 
+export const parseDDMMYYYY = (dateString: string): Date | null => {
+  if (!dateString.trim()) return null;
+  
+  const parts = dateString.split('/');
+  if (parts.length !== 3) return null;
+  
+  const [day, month, year] = parts.map(part => part.trim());
+  const dayNum = parseInt(day, 10);
+  const monthNum = parseInt(month, 10);
+  const yearNum = parseInt(year, 10);
+  
+  if (isNaN(dayNum) || isNaN(monthNum) || isNaN(yearNum)) return null;
+  if (dayNum < 1 || dayNum > 31 || monthNum < 1 || monthNum > 12 || yearNum < 1900 || yearNum > 2100) return null;
+  
+  const date = new Date(yearNum, monthNum - 1, dayNum);
+  
+  // Check if the date is valid (handles invalid dates like 31/02/2024)
+  if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
+    return null;
+  }
+  
+  return date;
+};
+
+export const getDaysUntilExpiry = (expiryTimestamp: number): number => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const expiry = new Date(expiryTimestamp);
+  expiry.setHours(0, 0, 0, 0);
+  return Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+};
+
+type DateValidationState = 'valid' | 'warning' | 'error' | 'past';
+
+export const getDateValidation = (expiryTimestamp: number): DateValidationState => {
+  const daysUntil = getDaysUntilExpiry(expiryTimestamp);
+  if (daysUntil < 0) return 'past';
+  if (daysUntil <= 30) return 'warning';
+  return 'valid';
+};
+
 type StatusVariant = "success" | "warning" | "destructive";
 type StatusIcon = "CheckmarkCircle01Icon" | "Clock03Icon" | "CancelCircleIcon";
 
