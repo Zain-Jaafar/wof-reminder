@@ -111,11 +111,9 @@ export function DatePickerInput({
       ? "border-yellow-500 focus:ring-yellow-500"
       : validationState === "warning"
         ? "border-yellow-500 focus:ring-yellow-500"
-        : validationState === "valid"
-          ? "border-green-500 focus:ring-green-500"
-          : inputError
-            ? "border-destructive focus:ring-destructive"
-            : "";
+        : inputError
+          ? "border-destructive focus:ring-destructive"
+          : "";
 
   return (
     <div className="w-full">
@@ -179,6 +177,7 @@ export function DatePickerInput({
                   selected={selectedDate}
                   onSelect={handleDateSelect}
                   className="w-full"
+                  defaultMonth={selectedDate}
                   initialFocus
                 />
               </div>
@@ -203,9 +202,7 @@ export function DatePickerInput({
               Expires in {getDaysUntilExpiry(value)} days
             </p>
           )}
-          {validationState === "valid" && (
-            <p className="text-sm text-green-600">Valid expiry date</p>
-          )}
+
         </div>
       )}
     </div>
