@@ -100,3 +100,29 @@ export const deleteVehicle = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const getCurrentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+    return await ctx.db.get(userId);
+  },
+});
+
+export const updateUserName = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Unauthorised");
+    }
+    await ctx.db.patch(userId, {
+      name: args.name,
+    });
+  },
+});

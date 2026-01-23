@@ -19,4 +19,6 @@ export {
   DashboardSquare02Icon,
   Settings05Icon,
   PanelLeftIcon,
+  UnfoldMoreIcon,
+  LogoutSquare01Icon,
 } from "@hugeicons/core-free-icons";
