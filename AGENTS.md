@@ -3,7 +3,7 @@
 ## Commands
 
 ### Development
-- `npm run dev` - Start development server (http://localhost:3000)
+- `npm run dev` - Start development server (http://localhost:3000) (never run `npm run dev` as an AI Agent, instead tell the user when they need to run it)
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint to check code quality
