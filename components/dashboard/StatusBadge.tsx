@@ -21,16 +21,8 @@ export function StatusBadge({ expiryTimestamp }: StatusBadgeProps) {
   const status = getStatus(expiryTimestamp);
 
   return (
-    <Badge
-      variant={
-        status.variant as "success" | "warning" | "destructive"
-      }
-    >
-      <Icon
-        icon={iconMap[status.icon]}
-        size={14}
-        className="mr-1"
-      />
+    <Badge variant={status.variant as "success" | "warning" | "destructive"}>
+      <Icon icon={iconMap[status.icon]} size={14} className="mr-1" />
       {status.status}
     </Badge>
   );

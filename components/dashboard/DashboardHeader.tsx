@@ -14,7 +14,11 @@ interface DashboardHeaderProps {
   hasVehicles?: boolean;
 }
 
-export function DashboardHeader({ onAdd, isLoading, hasVehicles }: DashboardHeaderProps) {
+export function DashboardHeader({
+  onAdd,
+  isLoading,
+  hasVehicles,
+}: DashboardHeaderProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   return (
@@ -33,7 +37,11 @@ export function DashboardHeader({ onAdd, isLoading, hasVehicles }: DashboardHead
             setIsAddDialogOpen(false);
           }}
           trigger={
-            <Button className="gap-2" onClick={() => setIsAddDialogOpen(true)} disabled={isLoading}>
+            <Button
+              className="gap-2"
+              onClick={() => setIsAddDialogOpen(true)}
+              disabled={isLoading}
+            >
               <Icon icon={Add01Icon} size={20} />
               Add Vehicle
             </Button>

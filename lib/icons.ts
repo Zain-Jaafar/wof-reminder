@@ -1,17 +1,22 @@
-export { Car01Icon } from "@hugeicons/core-free-icons";
-export { Add01Icon } from "@hugeicons/core-free-icons";
-export { Search01Icon } from "@hugeicons/core-free-icons";
-export { AArrowDown } from "@hugeicons/core-free-icons";
-export { AArrowUp } from "@hugeicons/core-free-icons";
-export { Calendar03Icon } from "@hugeicons/core-free-icons";
-export { Edit02Icon } from "@hugeicons/core-free-icons";
-export { Delete02Icon } from "@hugeicons/core-free-icons";
-export { CheckmarkCircle01Icon } from "@hugeicons/core-free-icons";
-export { Clock03Icon } from "@hugeicons/core-free-icons";
-export { CancelCircleIcon } from "@hugeicons/core-free-icons";
-export { Cancel01Icon } from "@hugeicons/core-free-icons";
-export { Mail01Icon } from "@hugeicons/core-free-icons";
-export { NewTwitterIcon } from "@hugeicons/core-free-icons";
-export { GoogleIcon } from "@hugeicons/core-free-icons";
-export { Loading02Icon } from "@hugeicons/core-free-icons";
-export { HelpCircleIcon } from "@hugeicons/core-free-icons";
+export {
+  Car01Icon,
+  Add01Icon,
+  Search01Icon,
+  AArrowDown,
+  AArrowUp,
+  Calendar03Icon,
+  Edit02Icon,
+  Delete02Icon,
+  CheckmarkCircle01Icon,
+  Clock03Icon,
+  CancelCircleIcon,
+  Cancel01Icon,
+  Mail01Icon,
+  NewTwitterIcon,
+  GoogleIcon,
+  Loading03Icon,
+  HelpCircleIcon,
+  DashboardSquare02Icon,
+  Settings05Icon,
+  PanelLeftIcon,
+} from "@hugeicons/core-free-icons";

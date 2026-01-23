@@ -10,16 +10,16 @@ import { WofRecord, vehicleFromConvexToWofRecord } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SearchInput } from "@/components/dashboard/SearchInput";
 import { WofTable } from "@/components/dashboard/WofTable";
-import { Loading02Icon } from "@/lib/icons";
+import { Loading03Icon } from "@/lib/icons";
 import { Icon } from "@/components/ui/icon";
 import { Id } from "@/convex/_generated/dataModel";
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="grow flex flex-col items-center justify-center p-4">
       <div className="flex flex-col items-center gap-4">
         <Icon
-          icon={Loading02Icon}
+          icon={Loading03Icon}
           size={48}
           strokeWidth={1}
           className="animate-spin text-primary"
@@ -142,9 +142,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="grow flex items-center justify-center p-4">
       <Card className="w-full max-w-6xl">
-        <DashboardHeader onAdd={handleAdd} isLoading={isDataLoading} hasVehicles={hasVehicles} />
+        <DashboardHeader
+          onAdd={handleAdd}
+          isLoading={isDataLoading}
+          hasVehicles={hasVehicles}
+        />
         <CardContent>
           <SearchInput value={searchQuery} onChange={setSearchQuery} />
           <WofTable
