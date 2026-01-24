@@ -48,6 +48,11 @@ export function WofFormDialog({
 }: WofFormDialogProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const filteredValue = e.target.value.replace(/[^0-9]/g, '');
+    setValue("clientPhoneNumber", filteredValue);
+  };
+
   const {
     register,
     handleSubmit,
@@ -140,10 +145,17 @@ export function WofFormDialog({
               </Label>
               <Input
                 id={`${mode}-clientPhoneNumber`}
-                placeholder="e.g., 0211234567"
+                type="tel"
+                inputMode="numeric"
+                placeholder="e.g. 0211234567"
                 {...register("clientPhoneNumber", {
                   required: "Phone number is required",
+                  pattern: {
+                    value: /^[0-9]*$/,
+                    message: "Phone number must contain numbers only",
+                  },
                 })}
+                onChange={handlePhoneChange}
               />
               {errors.clientPhoneNumber && (
                 <p className="text-sm text-destructive">
